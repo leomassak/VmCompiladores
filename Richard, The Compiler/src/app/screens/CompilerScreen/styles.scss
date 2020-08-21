@@ -1,0 +1,84 @@
+.panel {
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+}
+
+.header-panel {
+  background-color: #282942;
+  height: 5vh;
+}
+
+.header-panel ul {
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  list-style: none;
+  height: 100%;
+  margin: 0;
+}
+
+.header-panel li {
+  padding: 2%;
+  color: white;
+  font-size: 150%;
+}
+
+.main-panel {
+  height: 90vh;
+  display: grid;
+  grid-template-rows: 2fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-areas:
+  "table table table stack"
+  "input output breakpoint stack";
+}
+
+.table {
+  grid-area: table;
+  background-color: #282a36;
+  padding: 2%;
+  display: flex;
+}
+
+.area-content {
+  background-color: #383A59;
+  display: flex;
+  flex: 1;
+}
+
+
+.stack {
+  grid-area: stack;
+  background-color: #282a36;
+  padding: 6% 10% 6% 5%;
+  display: flex;
+}
+
+.input {
+  grid-area: input;
+  background-color: #282a36;
+  padding: 4% 4% 6% 6%;
+  display: flex;
+}
+
+.output {
+  grid-area: output;
+  background-color: #282a36;
+  padding: 4% 4% 6% 4%;
+  display: flex;
+}
+
+.breakpoint {
+  grid-area: breakpoint;
+  background-color: #282a36;
+  padding: 4% 6% 6% 4%;
+  display: flex;
+}
+
+.footer-panel {
+  background-color: #282a36;
+  height: 5vh;
+  display: flex;
+}
