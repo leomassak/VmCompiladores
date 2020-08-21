@@ -1,10 +1,11 @@
+/* eslint-disable no-undef */
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState } from 'react';
-
+import * as CommandsCompiler from '../../helpers/comands';
 import './styles.scss';
 
-function CompilerScreen(props) {
+function CompilerScreen() {
   const headings = [
     'I',
     'Instrução',
@@ -17,25 +18,29 @@ function CompilerScreen(props) {
 
   function handleFileSelector(event) {
     const tableRows = [];
-    // eslint-disable-next-line no-undef
     const reader = new FileReader();
-    reader.onload = async (e) => {
-      const fileRows = e.target.result.split('\n');
-      for (let i = 0; i < fileRows.length; i += 1) {
-        const rowValues = fileRows[i].split(' ');
-        const tableRowWithPadding = [];
-        for (let j = 0; j < headings.length; j += 1) {
-          if (j > rowValues.length) {
-            tableRowWithPadding[j] = '';
-          } else {
-            tableRowWithPadding[j] = rowValues[j];
+    if (reader) {
+      reader.onload = async (e) => {
+        const fileRows = e.target.result.split('\n');
+        for (let i = 0; i < fileRows.length; i += 1) {
+          if (fileRows[i].trim() !== '') {
+            const rowValues = fileRows[i].split(' ');
+            const tableRowWithPadding = [];
+            for (let j = 0; j < headings.length; j += 1) {
+              if (j > rowValues.length) {
+                tableRowWithPadding[j] = '';
+              } else {
+                tableRowWithPadding[j] = rowValues[j];
+              }
+            }
+            tableRows[i] = tableRowWithPadding;
           }
         }
-        tableRows[i] = tableRowWithPadding;
-      }
-      setRows(tableRows);
-    };
-    reader.readAsText(event.target.files[0]);
+        setRows(tableRows);
+      };
+      reader.readAsText(event.target.files[0]);
+      event.target.value = '';
+    }
   }
 
   function renderTableHeader() {
@@ -54,6 +59,13 @@ function CompilerScreen(props) {
     );
   }
 
+  function runCode() {
+    rows.forEach((item, index) => {
+      if (index === 1) console.log(item)
+      // CommandsCompiler.commands(item[1]);
+    });
+  }
+
   return (
     <div className="panel">
       <div className="header-panel">
@@ -68,7 +80,14 @@ function CompilerScreen(props) {
             <label htmlFor="file-button">Arquivo</label>
           </li>
           <li>
-            <button type="button">Executar</button>
+            <button type="button" onClick={() => setRows([])}>
+              Excluir
+            </button>
+          </li>
+          <li>
+            <button type="button" onClick={runCode}>
+              Executar
+            </button>
           </li>
           <li>
             <button type="button">Sobre</button>

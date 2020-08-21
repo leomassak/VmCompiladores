@@ -28,6 +28,7 @@
 .main-panel {
   height: 90vh;
   display: grid;
+  background-color: #282a36;
   grid-template-rows: 2fr 1fr;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-template-areas:
@@ -37,44 +38,48 @@
 
 .table {
   grid-area: table;
-  background-color: #282a36;
-  padding: 2%;
+  background-color: #383A59;
+  margin: 2%;
+  overflow-y: scroll;
   display: flex;
 }
 
 .area-content {
-  background-color: #383A59;
   display: flex;
   flex: 1;
+  flex-direction: column;
 }
-
 
 .stack {
   grid-area: stack;
-  background-color: #282a36;
-  padding: 6% 10% 6% 5%;
+  background-color: #383A59;
+  margin: 6% 10% 6% 5%;
   display: flex;
+  overflow-y: scroll;
 }
 
 .input {
   grid-area: input;
-  background-color: #282a36;
-  padding: 4% 4% 6% 6%;
+  background-color: #383A59;
+  margin: 4% 4% 6% 6%;
   display: flex;
+  overflow-y: scroll;
 }
 
 .output {
   grid-area: output;
-  background-color: #282a36;
-  padding: 4% 4% 6% 4%;
+  background-color: #383A59;
+  margin: 4% 4% 6% 4%;
   display: flex;
+  overflow-y: scroll;
 }
 
 .breakpoint {
   grid-area: breakpoint;
-  background-color: #282a36;
-  padding: 4% 6% 6% 4%;
+  background-color: #383A59;
+  margin: 4% 6% 6% 4%;
   display: flex;
+  overflow-y: scroll;
 }
 
 .footer-panel {
@@ -128,4 +133,24 @@ th {
   background-color: #282942;
   color: white;
   font-size: 125%;
+}
+
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background-color: #282942;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: white; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(196, 196, 196); 
 }
