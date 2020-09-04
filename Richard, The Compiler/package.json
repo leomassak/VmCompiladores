@@ -1,5 +1,5 @@
 {
-  "name": "frproteses",
+  "name": "VirtualMachine",
   "main": "public/electron.js",
   "version": "0.1.0",
   "private": true,
