@@ -17,6 +17,19 @@ function CompilerScreen() {
 
   const [rows, setRows] = useState([]);
 
+  function createNewVector(oldVector, newVector) {
+    let aux = null;
+    aux = oldVector.split(' ');
+    aux.forEach((item) => {
+      console.log(item);
+      if (item.includes(',')) {
+        console.log(item, newVector.concat(item.split(',')))
+        newVector = newVector.concat(item.split(','));
+      } else newVector.push(item);
+    });
+    return newVector;
+  }
+
   function loadTable(reader) {
     const tableRows = [];
     reader.onload = async (e) => {
@@ -24,7 +37,6 @@ function CompilerScreen() {
       for (let i = 0; i < fileRows.length; i += 1) {
         if (fileRows[i].trim() !== '') {
           let newVector = [];
-          let rowValues = [];
           const tableRowWithPadding = [];
           tableRowWithPadding[0] = i;
 
@@ -32,22 +44,9 @@ function CompilerScreen() {
             const dividedCommand = fileRows[i].split('//');
             const instruction = dividedCommand[0];
             [, tableRowWithPadding[4]] = dividedCommand;
-
-            rowValues = instruction.split(' ');
-            rowValues.forEach((item) => {
-              if (item.includes(',')) {
-                newVector = newVector.concat(item.split(','));
-              } else newVector.push(item);
-            });
-          } else {
-            rowValues = fileRows[i].split(' ');
-            rowValues.forEach((item) => {
-              if (item.includes(',')) {
-                newVector = newVector.concat(item.split(','));
-              } else newVector.push(item);
-            });
-          }
-
+            newVector = createNewVector(instruction, newVector);
+          } else newVector = createNewVector(fileRows[i], newVector);
+          console.log(newVector);
           const maxLimit = tableRowWithPadding[4] ? 2 : 1;
           for (let j = 0; j < headings.length - maxLimit; j += 1) {
             if (j > newVector.length) {
