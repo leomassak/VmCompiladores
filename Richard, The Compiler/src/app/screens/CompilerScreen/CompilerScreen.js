@@ -3,7 +3,7 @@
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState } from 'react';
-import * as CommandsCompiler from '../../helpers/commands';
+// import * as CommandsCompiler from '../../helpers/commands';
 import './styles.scss';
 
 function CompilerScreen() {
@@ -23,45 +23,38 @@ function CompilerScreen() {
       const fileRows = e.target.result.split('\n');
       for (let i = 0; i < fileRows.length; i += 1) {
         if (fileRows[i].trim() !== '') {
+          let newVector = [];
+          let rowValues = [];
+          const tableRowWithPadding = [];
+          tableRowWithPadding[0] = i;
+
           if (fileRows[i].indexOf('//') > 0) {
-            const divideComments = fileRows[i].split('//');
-            const comments = divideComments[1];
-            const instruction = divideComments[0];
-            const tableRowWithPadding = [];
-            let newVector = [];
+            const dividedCommand = fileRows[i].split('//');
+            const instruction = dividedCommand[0];
+            [, tableRowWithPadding[4]] = dividedCommand;
 
-            const rowValues = instruction.split(' ');
+            rowValues = instruction.split(' ');
             rowValues.forEach((item) => {
               if (item.includes(',')) {
                 newVector = newVector.concat(item.split(','));
               } else newVector.push(item);
             });
-
-            tableRowWithPadding[0] = i;
-            tableRowWithPadding[4] = comments;
-            for (let j = 0; j < headings.length - 2; j += 1) {
-              if (j > newVector.length) {
-                tableRowWithPadding[j + 1] = '';
-              } else tableRowWithPadding[j + 1] = newVector[j];
-            }
-            tableRows[i] = tableRowWithPadding;
           } else {
-            const rowValues = fileRows[i].split(' ');
-            let newVector = [];
+            rowValues = fileRows[i].split(' ');
             rowValues.forEach((item) => {
               if (item.includes(',')) {
                 newVector = newVector.concat(item.split(','));
               } else newVector.push(item);
             });
-            const tableRowWithPadding = [];
-            tableRowWithPadding[0] = i;
-            for (let j = 0; j < headings.length - 1; j += 1) {
-              if (j > newVector.length) {
-                tableRowWithPadding[j + 1] = '';
-              } else tableRowWithPadding[j + 1] = newVector[j];
-            }
-            tableRows[i] = tableRowWithPadding;
           }
+
+          const maxLimit = tableRowWithPadding[4] ? 2 : 1;
+          for (let j = 0; j < headings.length - maxLimit; j += 1) {
+            if (j > newVector.length) {
+              tableRowWithPadding[j + 1] = '';
+            } else tableRowWithPadding[j + 1] = newVector[j];
+          }
+          tableRows[i] = tableRowWithPadding;
         }
       }
       setRows(tableRows);
