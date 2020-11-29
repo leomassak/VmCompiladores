@@ -3,8 +3,8 @@
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState } from 'react';
-// import * as CommandsCompiler from '../../helpers/commands';
 import './styles.scss';
+import { useVmContext } from '../../contexts/VmContext';
 
 function CompilerScreen() {
   const headings = [
@@ -17,13 +17,15 @@ function CompilerScreen() {
 
   const [rows, setRows] = useState([]);
 
+  const { runVm, M, inputArray, outputArray } = useVmContext();
+
   function createNewVector(oldVector, newVector) {
     let aux = null;
     aux = oldVector.split(' ');
     aux.forEach((item) => {
       console.log(item);
       if (item.includes(',')) {
-        console.log(item, newVector.concat(item.split(',')))
+        console.log(item, newVector.concat(item.split(',')));
         newVector = newVector.concat(item.split(','));
       } else newVector.push(item);
     });
@@ -88,10 +90,7 @@ function CompilerScreen() {
   }
 
   function runCode() {
-    rows.forEach((item, index) => {
-      if (index === 0) console.log(item);
-      // CommandsCompiler.commands(item[1]);
-    });
+    runVm(rows);
   }
 
   return (
@@ -137,15 +136,40 @@ function CompilerScreen() {
           </div>
         </div>
         <div className="stack">
-          <div className="area-content" />
+          <div className="display-header">Conteúdo da pilha</div>
+          {/* {M?.length > 0 && ( */}
+          <table>
+            <tbody>
+              <tr className="stack-table-header">
+                <th>Endereço(s)</th>
+                <th>Valor</th>
+              </tr>
+              <tr>
+                <td>0</td>
+                <td>14</td>
+              </tr>
+            </tbody>
+          </table>
+          {/* )} */}
         </div>
         <div className="input">
-          <div className="area-content" />
+          <div className="display-header">Janela de Entrada</div>
+          <div className="area-content">
+            {inputArray?.map((item) => (
+              <p>{item}</p>
+            ))}
+          </div>
         </div>
         <div className="output">
-          <div className="area-content" />
+          <div className="display-header">Janela de Saída</div>
+          <div className="area-content">
+            {outputArray?.map((item) => (
+              <p>{item}</p>
+            ))}
+          </div>
         </div>
         <div className="breakpoint">
+          <div className="display-header">Break Point's</div>
           <div className="area-content" />
         </div>
       </div>
