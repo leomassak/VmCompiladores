@@ -17,15 +17,15 @@ function CompilerScreen() {
 
   const [rows, setRows] = useState([]);
 
-  const { runVm, M, inputArray, outputArray } = useVmContext();
+  const { runVm, M, s, inputArray, outputArray } = useVmContext();
 
   function createNewVector(oldVector, newVector) {
     let aux = null;
     aux = oldVector.split(' ');
     aux.forEach((item) => {
-      console.log(item);
+      // console.log(item);
       if (item.includes(',')) {
-        console.log(item, newVector.concat(item.split(',')));
+        // console.log(item, newVector.concat(item.split(',')));
         newVector = newVector.concat(item.split(','));
       } else newVector.push(item);
     });
@@ -48,7 +48,7 @@ function CompilerScreen() {
             [, tableRowWithPadding[4]] = dividedCommand;
             newVector = createNewVector(instruction, newVector);
           } else newVector = createNewVector(fileRows[i], newVector);
-          console.log(newVector);
+          // console.log(newVector);
           const maxLimit = tableRowWithPadding[4] ? 2 : 1;
           for (let j = 0; j < headings.length - maxLimit; j += 1) {
             if (j > newVector.length) {
@@ -137,20 +137,22 @@ function CompilerScreen() {
         </div>
         <div className="stack">
           <div className="display-header">Conteúdo da pilha</div>
-          {/* {M?.length > 0 && ( */}
-          <table>
-            <tbody>
-              <tr className="stack-table-header">
-                <th>Endereço(s)</th>
-                <th>Valor</th>
-              </tr>
-              <tr>
-                <td>0</td>
-                <td>14</td>
-              </tr>
-            </tbody>
-          </table>
-          {/* )} */}
+          {M?.length > 0 && (
+            <table>
+              <tbody className="stack-table">
+                <tr>
+                  <th>Endereço(s)</th>
+                  <th>Valor</th>
+                </tr>
+                {M?.map((item, index) => (
+                  <tr key={index}>
+                    <td>{index}</td>
+                    <td>{item}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
         <div className="input">
           <div className="display-header">Janela de Entrada</div>
@@ -169,7 +171,7 @@ function CompilerScreen() {
           </div>
         </div>
         <div className="breakpoint">
-          <div className="display-header">Break Point's</div>
+          <div className="display-header">Break Points</div>
           <div className="area-content" />
         </div>
       </div>
