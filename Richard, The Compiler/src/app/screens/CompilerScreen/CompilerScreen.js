@@ -5,6 +5,7 @@
 import React, { useState } from 'react';
 import './styles.scss';
 import { useVmContext } from '../../contexts/VmContext';
+import { VmCommands } from '../../utils/consts/vmComands';
 
 function CompilerScreen() {
   const headings = [
@@ -16,16 +17,38 @@ function CompilerScreen() {
   ];
 
   const [rows, setRows] = useState([]);
+  const [labels, setLabels] = useState([]);
 
-  const { runVm, M, s, inputArray, outputArray } = useVmContext();
+  const { runVm, M, P, inputArray, outputArray } = useVmContext();
+
+  function getLabelIndex(label) {
+    let labelIndex = null;
+    labels.forEach((item) => {
+      if (item.label.trim() === label.trim()) {
+        labelIndex = item.index;
+      }
+    });
+    return labelIndex;
+  }
+
+  function transformLabelsInIndex(table) {
+    table.forEach((item, index) => {
+      if (
+        item[1] === VmCommands.JMP ||
+        item[1] === VmCommands.JMPF ||
+        item[1] === VmCommands.CALL
+      ) {
+        const labelIndex = getLabelIndex(item[2]);
+        item[2] = labelIndex;
+      }
+    });
+  }
 
   function createNewVector(oldVector, newVector) {
     let aux = null;
     aux = oldVector.split(' ');
     aux.forEach((item) => {
-      // console.log(item);
       if (item.includes(',')) {
-        // console.log(item, newVector.concat(item.split(',')));
         newVector = newVector.concat(item.split(','));
       } else newVector.push(item);
     });
@@ -33,7 +56,7 @@ function CompilerScreen() {
   }
 
   function loadTable(reader) {
-    const tableRows = [];
+    let tableRows = [];
     reader.onload = async (e) => {
       const fileRows = e.target.result.split('\n');
       for (let i = 0; i < fileRows.length; i += 1) {
@@ -48,16 +71,26 @@ function CompilerScreen() {
             [, tableRowWithPadding[4]] = dividedCommand;
             newVector = createNewVector(instruction, newVector);
           } else newVector = createNewVector(fileRows[i], newVector);
-          // console.log(newVector);
+
           const maxLimit = tableRowWithPadding[4] ? 2 : 1;
           for (let j = 0; j < headings.length - maxLimit; j += 1) {
             if (j > newVector.length) {
               tableRowWithPadding[j + 1] = '';
             } else tableRowWithPadding[j + 1] = newVector[j];
           }
+
+          if (tableRowWithPadding[2]?.trim() === VmCommands.NULL) {
+            tableRowWithPadding[2] = '';
+            tableRowWithPadding[headings.length - 1] = tableRowWithPadding[1];
+            labels.push({ label: tableRowWithPadding[1], index: i });
+            tableRowWithPadding[1] = VmCommands.NULL;
+          }
+
           tableRows[i] = tableRowWithPadding;
+          P.push(tableRowWithPadding[1].trim());
         }
       }
+      transformLabelsInIndex(tableRows);
       setRows(tableRows);
     };
   }
