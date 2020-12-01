@@ -19,7 +19,13 @@ function CompilerScreen() {
   const [rows, setRows] = useState([]);
   const [labels, setLabels] = useState([]);
 
-  const { runVm, M, P, inputArray, outputArray } = useVmContext();
+  const { runVm, M, P, inputArray, outputArray, clearVm } = useVmContext();
+
+  function clearStates() {
+    setRows([]);
+    setLabels([]);
+    clearVm();
+  }
 
   function getLabelIndex(label) {
     let labelIndex = null;
@@ -141,7 +147,7 @@ function CompilerScreen() {
             <label htmlFor="file-button">Arquivo</label>
           </li>
           <li>
-            <button type="button" onClick={() => setRows([])}>
+            <button type="button" onClick={clearStates}>
               Excluir
             </button>
           </li>
@@ -190,16 +196,16 @@ function CompilerScreen() {
         <div className="input">
           <div className="display-header">Janela de Entrada</div>
           <div className="area-content">
-            {inputArray?.map((item) => (
-              <p>{item}</p>
+            {inputArray?.map((item, index) => (
+              <p key={index}>{item}</p>
             ))}
           </div>
         </div>
         <div className="output">
           <div className="display-header">Janela de Saída</div>
           <div className="area-content">
-            {outputArray?.map((item) => (
-              <p>{item}</p>
+            {outputArray?.map((item, index) => (
+              <p key={index}>{item}</p>
             ))}
           </div>
         </div>

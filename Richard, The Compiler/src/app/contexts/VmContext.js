@@ -1,6 +1,7 @@
 /* eslint-disable no-alert */
 import React, { useContext, createContext, useState } from 'react';
 import { VmCommands } from '../utils/consts/vmComands';
+import { getRandomValue } from '../utils/functions/ramdom';
 
 const Context = createContext();
 
@@ -15,6 +16,11 @@ function VmContext({ children }) {
   let iAux = 0;
   let sAux = 0;
 
+  function secureSetM(value, sParam, arrayM) {
+    if (M.length <= sParam) M.push(value);
+    else M[sParam] = value;
+  }
+
   function incrementI() {
     iAux += 1;
   }
@@ -24,15 +30,11 @@ function VmContext({ children }) {
   }
 
   function decrementI() {
-    if (iAux > 0) {
-      iAux -= 1;
-    }
+    iAux -= 1;
   }
 
   function decrementS() {
-    if (sAux > 0) {
-      sAux -= 1;
-    }
+    sAux -= 1;
   }
 
   function clearI() {
@@ -54,6 +56,17 @@ function VmContext({ children }) {
     return Number(param);
   }
 
+  function clearVm() {
+    clearI();
+    clearS();
+    setP([]);
+    setM([]);
+    setI(0);
+    setS(0);
+    setInputArray([]);
+    setOutputArray([]);
+  }
+
   function runVm(rows) {
     let userInput;
     let stopVm = false;
@@ -61,142 +74,150 @@ function VmContext({ children }) {
     while (iAux <= P.length && !stopVm) {
       const firstParam = rows[iAux][2] && getParam(P[iAux], rows[iAux][2]);
       const secondParam = rows[iAux][3] && getParam(P[iAux], rows[iAux][3]);
-      // console.log('params', firstParam, secondParam);
-      // console.log('i', iAux);
-      // console.log('lenght', P.length);
-      // console.log('P[iAux]', P[iAux]);
-      // console.log(P[iAux] === VmCommands.START);
-      // incrementI();
 
       switch (P[iAux]) {
         case VmCommands.START:
-          console.log('iniciar programa principal');
+          console.log('iniciar programa principal', sAux, iAux, M);
           sAux = -1;
           incrementI();
           break;
         case VmCommands.LDC:
-          console.log('carregar constante', firstParam);
+          console.log('carregar constante', firstParam, sAux, iAux, M);
           incrementS();
           M[sAux] = firstParam;
           incrementI();
           break;
         case VmCommands.LDV:
-          console.log('carregar valor', firstParam);
+          console.log('carregar valor', firstParam, sAux, iAux, M);
           incrementS();
           M[sAux] = M[firstParam];
           incrementI();
           break;
         case VmCommands.ADD:
-          console.log('somar', M[sAux - 1], M[sAux]);
+          console.log('somar', sAux, iAux, M);
           M[sAux - 1] = M[sAux - 1] + M[sAux];
+          console.log('ADD result', M[sAux - 1]);
           decrementS();
           incrementI();
           break;
         case VmCommands.SUB:
-          console.log('subtrair', M[sAux - 1], M[sAux]);
+          console.log('subtrair', sAux, iAux, M);
           M[sAux - 1] = M[sAux - 1] - M[sAux];
+          console.log('SUB result', M[sAux - 1]);
           decrementS();
           incrementI();
           break;
         case VmCommands.MULT:
-          console.log('multiplicar', M[sAux - 1], M[sAux]);
+          console.log('multiplicar', sAux, iAux, M);
           M[sAux - 1] = M[sAux - 1] * M[sAux];
+          console.log('MULT result', M[sAux - 1]);
           decrementS();
           incrementI();
           break;
         case VmCommands.DIVI:
-          console.log('dividir', M[sAux - 1], M[sAux]);
+          console.log('dividir', sAux, iAux, M);
           M[sAux - 1] = M[sAux - 1] / M[sAux];
+          console.log('DIV result', M[sAux - 1]);
           decrementS();
           incrementI();
           break;
         case VmCommands.INV:
-          console.log('inverte o sinal', M[sAux]);
+          console.log('inverte o sinal', sAux, iAux, M);
           M[sAux] = -M[sAux];
+          console.log('INV result', M[sAux]);
           incrementI();
           break;
         case VmCommands.AND:
-          console.log('conjunção', M[sAux - 1], M[sAux]);
+          console.log('conjunção', sAux, iAux, M);
           if (M[sAux - 1] === 1 && M[sAux] === 1) {
             M[sAux - 1] = 1;
           } else {
             M[sAux - 1] = 0;
           }
+          console.log('AND result', M[sAux - 1]);
           decrementS();
           incrementI();
           break;
         case VmCommands.OR:
-          console.log('disjunção', M[sAux - 1], M[sAux]);
+          console.log('disjunção', sAux, iAux, M);
           if (M[sAux - 1] === 1 || M[sAux] === 1) {
             M[sAux - 1] = 1;
           } else {
             M[sAux - 1] = 0;
           }
+          console.log('OR result', M[sAux - 1]);
           decrementS();
           incrementI();
           break;
         case VmCommands.NEG:
-          console.log('negação', 1 - M[sAux]);
+          console.log('negação', sAux, iAux, M);
           M[sAux] = 1 - M[sAux];
+          console.log('NEG result', M[sAux]);
           incrementI();
           break;
         case VmCommands.CME:
-          console.log('comparar menor', 1 - M[sAux - 1]);
+          console.log('comparar menor', sAux, iAux, M);
           if (M[sAux - 1] < M[sAux]) {
             M[sAux - 1] = 1;
           } else {
             M[sAux - 1] = 0;
           }
+          console.log('CME result', M[sAux - 1]);
           decrementS();
           incrementI();
           break;
         case VmCommands.CMA:
-          console.log('comparar maior', M[sAux - 1]);
+          console.log('comparar maior', sAux, iAux, M);
           if (M[sAux - 1] > M[sAux]) {
             M[sAux - 1] = 1;
           } else {
             M[sAux - 1] = 0;
           }
+          console.log('CMA result', M[sAux - 1]);
           decrementS();
           incrementI();
           break;
         case VmCommands.CEQ:
-          console.log('comparar igual', M[sAux - 1], M[sAux]);
+          console.log('comparar igual', sAux, iAux, M);
           if (M[sAux - 1] === M[sAux]) {
             M[sAux - 1] = 1;
           } else {
             M[sAux - 1] = 0;
           }
+          console.log('CEQ result', M[sAux - 1]);
           decrementS();
           incrementI();
           break;
         case VmCommands.CDIF:
-          console.log('comparar desigual', M[sAux - 1], M[sAux]);
+          console.log('comparar desigual', sAux, iAux, M);
           if (M[sAux - 1] !== M[sAux]) {
             M[sAux - 1] = 1;
           } else {
             M[sAux - 1] = 0;
           }
+          console.log('CDIF result', M[sAux - 1]);
           decrementS();
           incrementI();
           break;
         case VmCommands.CMEQ:
-          console.log('comparar menor ou igual', M[sAux - 1], M[sAux]);
+          console.log('comparar menor ou igual', sAux, iAux, M);
           if (M[sAux - 1] <= M[sAux]) {
             M[sAux - 1] = 1;
           } else {
             M[sAux - 1] = 0;
           }
+          console.log('CMEQ result', M[sAux - 1]);
           decrementS();
           incrementI();
           break;
         case VmCommands.CMAQ:
-          console.log('comparar maior ou igual', M[sAux - 1], M[sAux]);
+          console.log('comparar maior ou igual', sAux, iAux, M);
           if (M[sAux - 1] >= M[sAux]) {
             M[sAux - 1] = 1;
           } else {
             M[sAux - 1] = 0;
           }
+          console.log('CMAQ result', M[sAux - 1]);
           decrementS();
           incrementI();
           break;
@@ -206,93 +227,82 @@ function VmContext({ children }) {
           incrementI();
           break;
         case VmCommands.STR:
-          console.log('armazenar valor', firstParam);
+          console.log('armazenar valor', firstParam, sAux, iAux, M);
           M[firstParam] = M[sAux];
+          console.log('STR result', M[firstParam]);
           decrementS();
           incrementI();
           break;
         case VmCommands.JMP:
-          console.log('param', firstParam);
-          if (firstParam) {
-            iAux = firstParam;
-          } else {
-            stopVm = true;
-          }
+          console.log('param', firstParam, sAux, iAux, M);
+          iAux = firstParam;
+          console.log('JMP i value', iAux);
           break;
         case VmCommands.JMPF:
-          console.log('param', firstParam);
+          console.log('param', firstParam, sAux, iAux, M);
           console.log('desviar se falso');
-          if (!firstParam) {
-            stopVm = true;
-          }
 
           if (M[sAux] === 0) {
             iAux = firstParam;
           } else {
-            iAux += 1;
+            incrementI();
           }
+          decrementS();
+          console.log('JMPF i value', iAux);
           break;
         case VmCommands.NULL:
           console.log('nada');
           incrementI();
           break;
         case VmCommands.RD:
-          console.log('leitura');
+          console.log('leitura', sAux, iAux, M);
           incrementS();
           userInput = 2;
           inputArray.push(userInput);
           M[sAux] = userInput;
+          console.log('RD result', M[sAux]);
           incrementI();
           break;
         case VmCommands.PRN:
-          console.log('impressão');
+          console.log('impressão', sAux, iAux, M);
           outputArray.push(M[sAux]);
           decrementS();
           incrementI();
           break;
         case VmCommands.ALLOC:
-          console.log('alocar memoria');
-          if (firstParam >= 0 && secondParam >= 0) {
-            console.log('params', firstParam, secondParam);
-            for (let k = 0; k <= secondParam - 1; k += 1) {
-              console.log('k', k);
-              incrementS();
-              M[sAux] = M[firstParam + k];
-              console.log('alocação', M[sAux]);
-            }
-            incrementI();
-          } else {
-            stopVm = true;
+          console.log('alocar memoria', sAux, iAux, M);
+          console.log('params', firstParam, secondParam);
+          for (let k = 0; k < secondParam; k += 1) {
+            console.log('k', k);
+            incrementS();
+            if (M.length <= firstParam + k)
+              secureSetM(getRandomValue(), firstParam + k, M);
+            else secureSetM(M[firstParam + k], sAux, M);
+            console.log('alocação', M[sAux]);
           }
+          incrementI();
           break;
         case VmCommands.DALLOC:
-          console.log('desalocar memoria');
-          if (firstParam >= 0 && secondParam >= 0) {
-            for (let k = secondParam - 1; k >= 0; k -= 1) {
-              M[firstParam + k] = M[sAux];
-              console.log('desalocação', M[sAux], M[firstParam + k]);
-              decrementS();
-            }
-            incrementI();
-          } else {
-            stopVm = true;
+          console.log('desalocar memoria', sAux, iAux, M);
+          for (let k = secondParam - 1; k >= 0; k -= 1) {
+            M[firstParam + k] = M[sAux];
+            console.log('desalocação', M[sAux], M[firstParam + k]);
+            decrementS();
           }
+          incrementI();
           break;
         case VmCommands.CALL:
-          console.log(
-            'chamar procedimento ou função',
-            firstParam,
-            iAux,
-            M[sAux]
-          );
+          console.log('chamar procedimento ou função', firstParam, sAux, iAux, M);
           incrementS();
           M[sAux] = iAux + 1;
           iAux = firstParam;
+          console.log('CALL result', iAux, M[sAux]);
           break;
         case VmCommands.RETURN:
-          console.log('retornar de procedimento', M[sAux]);
+          console.log('retornar de procedimento', sAux, iAux, M);
           iAux = M[sAux];
           decrementS();
+          console.log('RETURN result', iAux);
           break;
         default:
           console.log(P[iAux], 'é um comando inválido');
@@ -320,6 +330,7 @@ function VmContext({ children }) {
         clearI,
         clearS,
         runVm,
+        clearVm,
         setP,
         setM,
         setI,
