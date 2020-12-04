@@ -109,7 +109,7 @@ function CompilerScreen() {
         reader.readAsText(event.target.files[0]);
         event.target.value = '';
       }
-    } else alert('Este tipo de arquivo não é suportado!');
+     } else alert('Este tipo de arquivo não é suportado!');
   }
 
   function renderTableHeader() {
