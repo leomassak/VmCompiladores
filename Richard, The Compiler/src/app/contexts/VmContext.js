@@ -65,6 +65,7 @@ function VmContext({ children }) {
     setS(0);
     setInputArray([]);
     setOutputArray([]);
+    console.clear();
   }
 
   function runVm(rows) {
@@ -257,7 +258,7 @@ function VmContext({ children }) {
         case VmCommands.RD:
           console.log('leitura', sAux, iAux, M);
           incrementS();
-          userInput = 2;
+          userInput = Math.round(getRandomValue());
           inputArray.push(userInput);
           M[sAux] = userInput;
           console.log('RD result', M[sAux]);
@@ -276,7 +277,7 @@ function VmContext({ children }) {
             console.log('k', k);
             incrementS();
             if (M.length <= firstParam + k)
-              secureSetM(getRandomValue(), firstParam + k, M);
+              secureSetM(Math.round(getRandomValue()), firstParam + k, M);
             else secureSetM(M[firstParam + k], sAux, M);
             console.log('alocação', M[sAux]);
           }
