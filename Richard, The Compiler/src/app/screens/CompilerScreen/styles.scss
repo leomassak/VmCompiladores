@@ -48,9 +48,31 @@
     }
 }
 
+.row-selected {
+  background:  #FB6DBD;
+  color: red;
+}
+
+.debug-icon {
+  position: absolute;
+  left: 5px;
+  top: 12px;
+}
+
+.breakpoint-circle {
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  background: rgba(255,0,0,0.5);
+  position: absolute;
+  left: 10px;
+  top: 16px;
+}
+
 .main-panel {
   height: 90vh;
   display: grid;
+  position: relative;
   background-color: #282a36;
   grid-template-rows: 2fr 1fr;
   grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -153,6 +175,7 @@ td {
   color: white;
   font-size: 125%;
   height: 25px;
+  position: relative;
 }
 
 tr:hover {background-color: #ddd;}
@@ -168,6 +191,53 @@ th {
   height: 45px;
 }
 
+.prompt button {
+  border: none;
+  background: #FB6DBD;
+  height: 50%;
+  margin-left: 15px;
+}
+
+.input-modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  border: none;
+  height: 10vh;
+  width: 25vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 20px;
+}
+
+.step-container {
+  display: flex;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 0;
+}
+
+.step-container span {
+  padding: 10px 20px;
+  cursor: pointer;
+  border: 1px solid #FFF;
+  background: #FB6DBD;
+  color: #FFF;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.4);
+}
 
 ::-webkit-scrollbar {
   width: 10px;
