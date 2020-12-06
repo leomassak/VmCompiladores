@@ -7,7 +7,6 @@ import Modal from 'react-modal';
 import { AiOutlineArrowRight } from 'react-icons/ai';
 
 import './styles.scss';
-// import { useVmContext } from '../../contexts/VmContext';
 import { VmCommands } from '../../utils/consts/vmComands';
 import { getRandomValue } from '../../utils/functions/ramdom';
 
@@ -53,14 +52,6 @@ function CompilerScreen() {
     sAux -= 1;
   }
 
-  function clearI() {
-    iAux = 0;
-  }
-
-  function clearS() {
-    sAux = 0;
-  }
-
   function getParam(command, param) {
     if (
       command === VmCommands.JMP ||
@@ -73,10 +64,7 @@ function CompilerScreen() {
   }
 
   function clearVm() {
-    clearI();
-    clearS();
     setStepArrow(false);
-    setP([]);
     setM([]);
     setI(0);
     setS(0);
@@ -97,69 +85,53 @@ function CompilerScreen() {
 
     switch (command) {
       case VmCommands.START:
-        console.log('iniciar programa principal', sAux, iAux, M);
         sAux = -1;
         incrementI();
         break;
       case VmCommands.LDC:
-        // console.log('carregar constante', firstParam, sAux, iAux, M);
         incrementS();
         M[sAux] = firstParam;
         incrementI();
         break;
       case VmCommands.LDV:
-        // console.log('carregar valor', firstParam, sAux, iAux, M);
         incrementS();
         M[sAux] = M[firstParam];
         incrementI();
         break;
       case VmCommands.ADD:
-        // console.log('somar', sAux, iAux, M);
         M[sAux - 1] = M[sAux - 1] + M[sAux];
-        console.log('ADD result', M[sAux - 1]);
         decrementS();
         incrementI();
         break;
       case VmCommands.SUB:
-        // console.log('subtrair', sAux, iAux, M);
         M[sAux - 1] = M[sAux - 1] - M[sAux];
-        console.log('SUB result', M[sAux - 1]);
         decrementS();
         incrementI();
         break;
       case VmCommands.MULT:
-        // console.log('multiplicar', sAux, iAux, M);
         M[sAux - 1] = M[sAux - 1] * M[sAux];
-        console.log('MULT result', M[sAux - 1]);
         decrementS();
         incrementI();
         break;
       case VmCommands.DIVI:
-        // console.log('dividir', sAux, iAux, M);
         M[sAux - 1] = M[sAux - 1] / M[sAux];
-        console.log('DIV result', M[sAux - 1]);
         decrementS();
         incrementI();
         break;
       case VmCommands.INV:
-        // console.log('inverte o sinal', sAux, iAux, M);
         M[sAux] = -M[sAux];
-        console.log('INV result', M[sAux]);
         incrementI();
         break;
       case VmCommands.AND:
-        // console.log('conjunção', sAux, iAux, M);
         if (M[sAux - 1] === 1 && M[sAux] === 1) {
           M[sAux - 1] = 1;
         } else {
           M[sAux - 1] = 0;
         }
-        console.log('AND result', M[sAux - 1]);
         decrementS();
         incrementI();
         break;
       case VmCommands.OR:
-        // console.log('disjunção', sAux, iAux, M);
         if (M[sAux - 1] === 1 || M[sAux] === 1) {
           M[sAux - 1] = 1;
         } else {
@@ -170,97 +142,75 @@ function CompilerScreen() {
         incrementI();
         break;
       case VmCommands.NEG:
-        // console.log('negação', sAux, iAux, M);
         M[sAux] = 1 - M[sAux];
-        console.log('NEG result', M[sAux]);
         incrementI();
         break;
       case VmCommands.CME:
-        // console.log('comparar menor', sAux, iAux, M);
         if (M[sAux - 1] < M[sAux]) {
           M[sAux - 1] = 1;
         } else {
           M[sAux - 1] = 0;
         }
-        // console.log('CME result', M[sAux - 1]);
         decrementS();
         incrementI();
         break;
       case VmCommands.CMA:
-        // console.log('comparar maior', sAux, iAux, M);
         if (M[sAux - 1] > M[sAux]) {
           M[sAux - 1] = 1;
         } else {
           M[sAux - 1] = 0;
         }
-        // console.log('CMA result', M[sAux - 1]);
         decrementS();
         incrementI();
         break;
       case VmCommands.CEQ:
-        // console.log('comparar igual', sAux, iAux, M);
         if (M[sAux - 1] === M[sAux]) {
           M[sAux - 1] = 1;
         } else {
           M[sAux - 1] = 0;
         }
-        // console.log('CEQ result', M[sAux - 1]);
         decrementS();
         incrementI();
         break;
       case VmCommands.CDIF:
-        // console.log('comparar desigual', sAux, iAux, M);
         if (M[sAux - 1] !== M[sAux]) {
           M[sAux - 1] = 1;
         } else {
           M[sAux - 1] = 0;
         }
-        // console.log('CDIF result', M[sAux - 1]);
         decrementS();
         incrementI();
         break;
       case VmCommands.CMEQ:
-        // console.log('comparar menor ou igual', sAux, iAux, M);
         if (M[sAux - 1] <= M[sAux]) {
           M[sAux - 1] = 1;
         } else {
           M[sAux - 1] = 0;
         }
-        // console.log('CMEQ result', M[sAux - 1]);
         decrementS();
         incrementI();
         break;
       case VmCommands.CMAQ:
-        // console.log('comparar maior ou igual', sAux, iAux, M);
         if (M[sAux - 1] >= M[sAux]) {
           M[sAux - 1] = 1;
         } else {
           M[sAux - 1] = 0;
         }
-        // console.log('CMAQ result', M[sAux - 1]);
         decrementS();
         incrementI();
         break;
       case VmCommands.HLT:
-        // console.log('parar');
         setStepArrow(false);
         break;
       case VmCommands.STR:
-        // console.log('armazenar valor', firstParam, sAux, iAux, M);
         M[firstParam] = M[sAux];
-        console.log('STR', M[sAux], sAux, M);
-        // console.log('STR result', M[firstParam]);
         decrementS();
         incrementI();
         break;
       case VmCommands.JMP:
-        // console.log('param', firstParam, sAux, iAux, M);
         iAux = firstParam;
-        // console.log('JMP i value', iAux);
         break;
       case VmCommands.JMPF:
-        // console.log('param', firstParam, sAux, iAux, M);
-        // console.log('desviar se falso');
 
         if (M[sAux] === 0) {
           iAux = firstParam;
@@ -268,65 +218,44 @@ function CompilerScreen() {
           incrementI();
         }
         decrementS();
-        // console.log('JMPF i value', iAux);
         break;
       case VmCommands.NULL:
-        // console.log('nada');
         incrementI();
         break;
       case VmCommands.RD:
-        // console.log('leitura', sAux, iAux, M);
         incrementS();
         setShowPrompt(true);
         incrementI();
-
-        // readUserInput();
         break;
       case VmCommands.PRN:
-        // console.log('impressão', sAux, iAux, M);
         outputArray.push(M[sAux]);
         decrementS();
         incrementI();
         break;
       case VmCommands.ALLOC:
-        // console.log('alocar memoria', sAux, iAux, M);
         for (let k = 0; k < secondParam; k += 1) {
-          // console.log('k', k);
           incrementS();
           if (M.length <= firstParam + k)
             secureSetM(Math.round(getRandomValue()), firstParam + k, M);
           else secureSetM(M[firstParam + k], sAux, M);
-          // console.log('alocação', M[sAux]);
         }
         incrementI();
         break;
       case VmCommands.DALLOC:
-        // console.log('desalocar memoria', sAux, iAux, M);
         for (let k = secondParam - 1; k >= 0; k -= 1) {
           M[firstParam + k] = M[sAux];
-          // console.log('desalocação', M[sAux], M[firstParam + k]);
           decrementS();
         }
         incrementI();
         break;
       case VmCommands.CALL:
-        // console.log(
-        //   'chamar procedimento ou função',
-        //   firstParam,
-        //   sAux,
-        //   iAux,
-        //   M
-        // );
         incrementS();
         M[sAux] = iAux + 1;
         iAux = firstParam;
-        // console.log('CALL result', iAux, M[sAux]);
         break;
       case VmCommands.RETURN:
-        // console.log('retornar de procedimento', sAux, iAux, M);
         iAux = M[sAux];
         decrementS();
-        // console.log('RETURN result', iAux);
         break;
       default:
         console.log(P[iAux], 'é um comando inválido');
@@ -345,6 +274,7 @@ function CompilerScreen() {
       setI(iAux);
       setS(sAux);
     }
+    console.log('parei');
 
     if (breakPoint) {
       setStepArrow(true);
@@ -359,13 +289,14 @@ function CompilerScreen() {
   function clearStates() {
     setRows([]);
     setLabels([]);
+    setP([]);
     clearVm();
   }
 
   function runStepByStep() {
     if (stepArrow) {
       if (i < P.length) {
-        console.log('s, i, P', s, i, P[i]);
+        console.log('s, i, P', s, i, P[i], P);
         execCommand(P[i]);
         console.log('iAux, sAux', iAux, sAux);
         setI(iAux);
@@ -430,15 +361,9 @@ function CompilerScreen() {
           const tableRowWithPadding = [];
           tableRowWithPadding[0] = iTable;
 
-          if (fileRows[iTable].indexOf('//') > 0) {
-            const dividedCommand = fileRows[iTable].split('//');
-            const instruction = dividedCommand[0];
-            [, tableRowWithPadding[4]] = dividedCommand;
-            newVector = createNewVector(instruction, newVector);
-          } else newVector = createNewVector(fileRows[iTable], newVector);
+          newVector = createNewVector(fileRows[iTable], newVector);
 
-          const maxLimit = tableRowWithPadding[4] ? 2 : 1;
-          for (let j = 0; j < headings.length - maxLimit; j += 1) {
+          for (let j = 0; j < headings.length - 1; j += 1) {
             if (j > newVector.length) {
               tableRowWithPadding[j + 1] = '';
             } else tableRowWithPadding[j + 1] = newVector[j];
@@ -478,22 +403,26 @@ function CompilerScreen() {
   }
 
   function runCode() {
-    clearVm();
     runVm();
   }
 
   function readUserInput() {
     inputArray.push(Number(userInput));
     if (!stepArrow) {
+      console.log('s, i, P', s, i, P);
       sAux = s + 1;
       iAux = i + 1;
+      console.log('iAux, sAux', iAux, sAux);
       M[sAux] = Number(userInput);
     } else {
       M[s] = Number(userInput);
     }
     setShowPrompt(false);
     setUserInput('');
-    if (!stepArrow) setTimeout(() => runVm(), 1000);
+    if (!stepArrow) {
+      console.log('to em exec');
+      setTimeout(() => runVm(), 300);
+    }
   }
 
   function handleStepByStep() {
@@ -555,11 +484,11 @@ function CompilerScreen() {
         </ul>
       </div>
       <div className="main-panel">
-        {stepArrow && (
+        {stepArrow && !showPrompt && (
           <div className="step-container">
             <span onClick={clearVm}>X</span>
             <span onClick={runStepByStep}>
-              <AiOutlineArrowRight />
+              <AiOutlineArrowRight fontSize={14} />
             </span>
           </div>
         )}
